@@ -10,14 +10,15 @@ class UserService
 {
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, SwapiService $swapiService)
     {
         $this->userRepository = $userRepository;
+        $this->swapiService = $swapiService;
     }
 
     public function register(array $user): array
     {
-        $user['hero'] = 1;
+        $user['hero'] = $this->swapiService->getRandomHeroId();
         $user['password'] = Hash::make($user['password']);
         return ReturnData::create([
             'data' => $this->userRepository->create($user),
