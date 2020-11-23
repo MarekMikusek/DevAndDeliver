@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\UserService;
 
-class RegisterUserController extends Controller
+class UserController extends Controller
 {
     protected $userService;
 
