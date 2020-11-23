@@ -7,13 +7,13 @@ class ReturnData
     /**
      * Create return data for ApiResponse
      */
-    public static function create(array $retrunData): array
+    public static function create(array $returnData): array
     {
         return [
-            'error' => $retrunData['error'] ?? '',
-            'code' => $retrunData['code'] ?? 200,
-            'data' => $retrunData['data'] ?? [],
-            'message' => $retrunData['message'] ?? '',
+            'error' => $returnData['error'] ?? '',
+            'code' => $returnData['code'] ?? 200,
+            'data' => $returnData['data'] ?? [],
+            'message' => $returnData['message'] ?? '',
         ];
     }
 }

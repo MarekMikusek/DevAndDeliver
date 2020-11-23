@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\ReturnData;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -17,6 +18,12 @@ class UserService
     public function register(array $user): array
     {
         $user['hero'] = 1;
-        return ReturnData::create(['data' => $this->userRepository->create($user), 'message' => 'user was created']);
+        $user['password'] = Hash::make($user['password']);
+        return ReturnData::create([
+            'data' => $this->userRepository->create($user),
+            'message' => 'user was created'
+        ]);
     }
+
+
 }
