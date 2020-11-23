@@ -6,8 +6,8 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - MARIADB_USER=my_user
-      - MARIADB_DATABASE=my_database
-      - MARIADB_PASSWORD=my_password
+      - MARIADB_DATABASE=swapi
+      - MARIADB_PASSWORD=swapi!heroes@db%pass
     networks:
       - dev_and_deliver_network
     container_name: dev_and_deliver_db
@@ -16,10 +16,10 @@ services:
     tty: true
     image: docker.io/bitnami/laravel:7-debian-10
     environment:
-      - DB_HOST=mariadb
+      - DB_HOST=dev_and_deliver_db
       - DB_USERNAME=my_user
-      - DB_DATABASE=my_database
-      - DB_PASSWORD=my_password
+      - DB_DATABASE=swapi
+      - DB_PASSWORD=swapi!heroes@db%pass
     depends_on:
       - mariadb
     ports:
@@ -32,3 +32,4 @@ services:
 
 networks:
   dev_and_deliver_network:
+    driver: bridge
