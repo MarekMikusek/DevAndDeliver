@@ -23,13 +23,11 @@ class UserController extends Controller
         return response()->json($this->userService->register($credentials->validated()));
     }
 
-    public function update(UpdateUserRequest $request){
-        // dd($request->validated());
-        // if(!$user = $this->userService->update($request->validated()){
-        //     return ReturnData::create(['message' => 'error occured', 'code' => 500]);
-        // }
+    public function updateEmail(UpdateUserRequest $request)
+    {
         return ReturnData::create([
-            'data'=> [$this->userService->update($request->validated()),
-            'message' => 'user was updated']]);
+            'data' => [$this->userService->updateEmail($request->validated()['email']),
+            'message' => 'user was updated']
+        ]);
     }
 }

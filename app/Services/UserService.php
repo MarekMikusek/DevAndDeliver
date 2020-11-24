@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\ReturnData;
+use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -26,9 +28,10 @@ class UserService
         ]);
     }
 
-    public function update($user)
+    public function updateEmail(string $newEmail): User
     {
-        
+        $user = User::find(Auth::user()->id);
+        $user->email = $newEmail;
+        return $user;
     }
-
 }

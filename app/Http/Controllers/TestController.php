@@ -9,7 +9,6 @@ class TestController extends Controller
 {
     public function test()
     {
-        Log::info('test');
         dd(User::all());
     }
 }

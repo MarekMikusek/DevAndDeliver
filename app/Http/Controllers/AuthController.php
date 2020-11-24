@@ -22,11 +22,10 @@ class AuthController extends Controller
 
     public function login(LoginRequest $credentials): JsonResponse
     {
-        if(!$token = JWTAuth::attempt($credentials->validated())){
+        if (!$token = JWTAuth::attempt($credentials->validated())) {
             return response()->json(
-                ReturnData::create(['code' => 401, 'message' =>'unathorized'])
+                ReturnData::create(['code' => 401, 'message' => 'unathorized'])
             );
-
         }
 
         return response()->json(ReturnData::create([
@@ -34,7 +33,6 @@ class AuthController extends Controller
             'message' => 'successful login',
             'data' => ['token' => $token]
         ]));
-
     }
 
     public function logout(Request $request)

@@ -11,9 +11,8 @@ class UserRepository
         return  User::create($user);
     }
 
-    public function update($user)
+    public function save($user)
     {
-
+        return $user->save();
     }
-
 }

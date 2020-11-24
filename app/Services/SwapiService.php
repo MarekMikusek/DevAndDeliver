@@ -12,7 +12,7 @@ class SwapiService
 {
     protected $client;
     protected $header;
-    protected $heroesList =[];
+    protected $heroesList = [];
 
     public function __construct(Client $client)
     {
@@ -26,7 +26,7 @@ class SwapiService
 
     public function getRandomHeroId(): int
     {
-        if(!count($this->heroesList)){
+        if (!count($this->heroesList)) {
             return 0;
         }
         return rand(1, count($this->heroesList));
@@ -36,7 +36,7 @@ class SwapiService
     {
         $hero = (array)$hero;
         $ret = [$hero['homeworld']];
-        foreach(['vehicles', 'films', 'starships', 'species'] as $resource){
+        foreach (['vehicles', 'films', 'starships', 'species'] as $resource) {
             $ret = array_merge($ret, $hero[$resource]);
         }
         return $ret;
@@ -44,7 +44,7 @@ class SwapiService
 
     public function getHeroesList(): array
     {
-        if ($heroes = Cache::has('heroes_list')){
+        if ($heroes = Cache::has('heroes_list')) {
             return json_decode(Cache::get('heroes_list'));
         };
         $heroes = [];
@@ -52,7 +52,7 @@ class SwapiService
         $nextPage = 'http://swapi.dev/api/people/';
         do {
             $page = $this->getApiResponse("{$nextPage}");
-            foreach($page->results as $hero){
+            foreach ($page->results as $hero) {
                 $hero->available_resources = $this->getResourceList($hero);
                 $heroes[] = $hero;
             }
@@ -72,7 +72,7 @@ class SwapiService
                 ['headers' => $this->header]
             );
             return json_decode($apiResponse->getBody());
-        } catch(ClientException $e){
+        } catch (ClientException $e) {
             return new stdClass();
         }
     }

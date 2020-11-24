@@ -18,5 +18,6 @@ Route::post("/register", "UserController@register");
 Route::post("/login", "AuthController@login");
 
 Route::group(["middleware" => "auth.jwt"], function () {
-    Route::post("logout", "AuthController@logout");
+    Route::post("/logout", "AuthController@logout");
+    Route::patch("/update-email", "UserController@updateEmail");
 });
