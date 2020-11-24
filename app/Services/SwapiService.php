@@ -9,7 +9,6 @@ use GuzzleHttp\Exception\ClientException;
 
 class SwapiService
 {
-    protected $apiUrl = 'http://swapi.dev/api/';
     protected $client;
     protected $header;
     protected $heroesList =[];
@@ -35,13 +34,16 @@ class SwapiService
     public function getHeroesList(): array
     {
         $heroes = [];
-        $id = 1;
+        $pageNo = 1;
+        $nextPage = 'http://swapi.dev/api/people/';
         do {
-            $hero = $this->getApiResponse("people/{$id}/");
-            $heroes[$id] = $hero;
-            $id++;
-
-        } while ($id < 1000 && $hero);
+            $page = $this->getApiResponse("{$nextPage}");
+            foreach($page->results as $hero){
+                $heroes[] = $hero;
+            }
+            $pageNo++;
+            $nextPage = $page->next;
+        } while ($pageNo < 100 && $page && $nextPage);
         return $heroes;
     }
 
@@ -50,9 +52,10 @@ class SwapiService
         try {
             $apiResponse = $this->client->request(
                 "GET",
-                $this->apiUrl . $endPoint,
+                $endPoint,
                 ['headers' => $this->header]
             );
+            dump(json_decode($apiResponse->getBody()));
             return json_decode($apiResponse->getBody());
         } catch(ClientException $e){
             return new stdClass();

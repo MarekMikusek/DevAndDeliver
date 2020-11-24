@@ -12,6 +12,18 @@ services:
       - dev_and_deliver_network
     container_name: dev_and_deliver_db
 
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../data/redis:/data
+    restart: always
+    networks:
+      - dev_and_deliver_network
+    container_name: dev_and_deliver_redis
+
   DevAndDeliver:
     tty: true
     image: docker.io/bitnami/laravel:7-debian-10
@@ -22,6 +34,7 @@ services:
       - DB_PASSWORD=swapi!heroes@db%pass
     depends_on:
       - mariadb
+      - redis
     ports:
       - 3000:3000
     volumes:

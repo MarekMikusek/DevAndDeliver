@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ReturnData;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterUserRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,16 +20,11 @@ class AuthController extends Controller
         $this->userService = $userService;
     }
 
-    public function register(RegisterUserRequest $credentials): JsonResponse
-    {
-        return response()->json($this->userService->register($credentials->validated()));
-    }
-
     public function login(LoginRequest $credentials): JsonResponse
     {
         if(!$token = JWTAuth::attempt($credentials->validated())){
             return response()->json(
-                ReturnData::create(['code' => 401, 'error' =>'unathorized'])
+                ReturnData::create(['code' => 401, 'message' =>'unathorized'])
             );
 
         }

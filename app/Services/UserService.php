@@ -26,5 +26,9 @@ class UserService
         ]);
     }
 
+    public function update($user)
+    {
+        
+    }
 
 }

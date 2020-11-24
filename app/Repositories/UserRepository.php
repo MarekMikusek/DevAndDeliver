@@ -10,4 +10,10 @@ class UserRepository
     {
         return  User::create($user);
     }
+
+    public function update($user)
+    {
+
+    }
+
 }
