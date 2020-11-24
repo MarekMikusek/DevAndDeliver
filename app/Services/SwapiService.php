@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class SwapiService
@@ -22,6 +23,16 @@ class SwapiService
             'Content-Type' => 'application/json',
             'Accept' => 'application/json'
         ];
+    }
+
+    public function getHeroResources(string $resource)
+    {
+        if($resource === 'planets'){
+            return $this->heroesList[Auth::user()->hero]['homeworld'];
+        }
+        $hero = (array)$this->heroesList[Auth::user()->hero];
+
+        return $hero[$resource];
     }
 
     public function getRandomHeroId(): int
