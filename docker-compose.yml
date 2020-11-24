@@ -20,6 +20,7 @@ services:
     volumes:
       - ../data/redis:/data
     restart: always
+    
     networks:
       - dev_and_deliver_network
     container_name: dev_and_deliver_redis

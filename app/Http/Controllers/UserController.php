@@ -24,7 +24,7 @@ class UserController extends Controller
     }
 
     public function update(UpdateUserRequest $request){
-        dd($request->validated());
+        // dd($request->validated());
         // if(!$user = $this->userService->update($request->validated()){
         //     return ReturnData::create(['message' => 'error occured', 'code' => 500]);
         // }
