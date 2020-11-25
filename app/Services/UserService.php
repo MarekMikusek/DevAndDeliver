@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserService
 {
@@ -18,7 +19,7 @@ class UserService
         $this->swapiService = $swapiService;
     }
 
-    public function register(array $user): array
+    public function register(array $user): JsonResponse
     {
         $user['hero'] = $this->swapiService->getRandomHeroId();
         $user['password'] = Hash::make($user['password']);

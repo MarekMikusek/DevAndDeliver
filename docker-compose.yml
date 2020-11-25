@@ -10,6 +10,8 @@ services:
       - MARIADB_PASSWORD=swapi!heroes@db%pass
     networks:
       - dev_and_deliver_network
+    volumes:
+      - ./db_data:/var/lib/mysql
     container_name: dev_and_deliver_db
 
   DevAndDeliver:

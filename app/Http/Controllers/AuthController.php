@@ -28,27 +28,23 @@ class AuthController extends Controller
             );
         }
 
-        return response()->json(ReturnData::create([
+        return ReturnData::create([
             'code' => 200,
             'message' => 'successful login',
             'data' => ['token' => $token]
-        ]));
+        ]);
     }
 
     public function logout(Request $request)
     {
         try {
             JWTAuth::invalidate($request['token']);
-
-            return response()->json([
-                "code" => 200,
-                "message" => "User logged out successfully"
-            ]);
+            return ReturnData::create(["message" => "User logged out successfully"]);
         } catch (JWTException $exception) {
-            return response()->json(ReturnData::create([
+            return ReturnData::create([
                 "code" => 500,
                 "message" => "bad token or server error"
-            ]));
+            ]);
         }
     }
 }

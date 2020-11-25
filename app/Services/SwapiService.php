@@ -2,18 +2,20 @@
 
 namespace App\Services;
 
+use App\Helpers\MapResources;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Log;
 use stdClass;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class SwapiService
 {
     protected $client;
     protected $header;
     protected $heroesList = [];
+    protected $swapiUrl = 'http://swapi.dev/api';
 
     public function __construct(Client $client)
     {
@@ -25,14 +27,24 @@ class SwapiService
         ];
     }
 
+    public function resource(string $resource, int $id): object
+    {
+        $resourceName = MapResources::map($resource);
+        $resourceUrl = "{$this->swapiUrl}/{$resourceName}/{$id}/";
+        $userHero = (array)$this->heroesList[Auth::user()->hero];
+        if (!$resourceName || !in_array($resourceUrl, $userHero['available_resources'])) {
+            return new stdClass();
+        }
+        return $this->getApiResponse($resourceUrl);
+    }
+
     public function getHeroResources(string $resource)
     {
-        if($resource === 'planets'){
+        if ($resource === 'planets') {
             return $this->heroesList[Auth::user()->hero]['homeworld'];
         }
-        $hero = (array)$this->heroesList[Auth::user()->hero];
-
-        return $hero[$resource];
+        $userHero = (array)$this->heroesList[Auth::user()->hero];
+        return $userHero[$resource];
     }
 
     public function getRandomHeroId(): int
@@ -55,14 +67,11 @@ class SwapiService
 
     public function getHeroesList(): array
     {
-        if ($heroes = Cache::has('heroes_list')) {
-            return json_decode(Cache::get('heroes_list'));
-        };
         $heroes = [];
         $pageNo = 1;
         $nextPage = 'http://swapi.dev/api/people/';
         do {
-            $page = $this->getApiResponse("{$nextPage}");
+            $page = $this->getApiResponse($nextPage);
             foreach ($page->results as $hero) {
                 $hero->available_resources = $this->getResourceList($hero);
                 $heroes[] = $hero;
@@ -70,18 +79,21 @@ class SwapiService
             $pageNo++;
             $nextPage = $page->next;
         } while ($pageNo < 100 && $page && $nextPage);
-        Cache::put('heroes_list', json_encode($heroes), 86400);
         return $heroes;
     }
 
-    protected function getApiResponse(string $endPoint): object
+    protected function getApiResponse(string $endPoint)
     {
+        if (Cache::has($endPoint)) {
+            return Cache::get($endPoint);
+        };
         try {
             $apiResponse = $this->client->request(
                 "GET",
                 $endPoint,
                 ['headers' => $this->header]
             );
+            Cache::put($endPoint, json_decode($apiResponse->getBody()), now()->addDay(1));
             return json_decode($apiResponse->getBody());
         } catch (ClientException $e) {
             return new stdClass();
